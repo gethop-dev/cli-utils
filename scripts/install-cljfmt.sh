@@ -84,6 +84,8 @@ pushd "$DOWNLOAD_DIR" > /dev/null
 
 echo -e "Downloading $DOWNLOAD_URL to $DOWNLOAD_DIR"
 curl -o "$FILENAME" -sL "$DOWNLOAD_URL"
+
+echo -e "Unpacking $FILENAME to $INSTALL_DIR"
 sudo tar -xzf "$FILENAME" -C "$INSTALL_DIR"
 rm "$FILENAME"
 echo "Done!"
