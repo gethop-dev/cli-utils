@@ -2,14 +2,21 @@
 
 set -euo pipefail
 
-INSTALL_DIR=""
-DOWNLOAD_DIR=""
+DEFAULT_INSTALL_DIR="/usr/local/bin"
+INSTALL_DIR="$DEFAULT_INSTALL_DIR"
+DEFAULT_DOWNLOAD_DIR="/tmp"
+DOWNLOAD_DIR="$DEFAULT_DOWNLOAD_DIR"
 VERSION=""
 
 print_help() {
     echo -e
     echo "Usage:"
     echo "install [--dir <dir>] [--download-dir <download-dir>] [--version <version>]"
+    echo -e
+    echo "Defaults:"
+    echo " * Installation directory: ${DEFAULT_INSTALL_DIR}"
+    echo " * Download directory: $DEFAULT_DOWNLOAD_DIR"
+    echo " * Version: <Latest release on Github>"
     exit 1
 }
 
@@ -39,10 +46,6 @@ do
             ;;
     esac
 done
-
-if [ -z "$INSTALL_DIR" ] || [ -z "$DOWNLOAD_DIR" ]; then
-  print_help
-fi
 
 if [[ "$VERSION" == "" ]]; then
   VERSION="$(curl -s https://api.github.com/repos/weavejester/cljfmt/releases/latest | grep -o '"tag_name": *"[^"]*"' | sed 's/"tag_name": *"\([^"]*\)"/\1/')"
@@ -81,7 +84,7 @@ pushd "$DOWNLOAD_DIR" > /dev/null
 
 echo -e "Downloading $DOWNLOAD_URL to $DOWNLOAD_DIR"
 curl -o "$FILENAME" -sL "$DOWNLOAD_URL"
-tar -xzf "$FILENAME" -C "$INSTALL_DIR"
+sudo tar -xzf "$FILENAME" -C "$INSTALL_DIR"
 rm "$FILENAME"
 echo "Done!"
 
